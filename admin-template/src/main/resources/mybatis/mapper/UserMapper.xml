@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luffy.mapper.UserMapper">
+
+    <resultMap id="resultMap" type="com.luffy.model.User">
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="account" jdbcType="VARCHAR" property="account" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="state" jdbcType="INTEGER" property="state" />
+        <result column="register_time" jdbcType="TIMESTAMP" property="registerTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+
+    <sql id="column">
+        id, user_name, account, password, state, register_time, update_time
+    </sql>
+
+    <select id="selectByUserName" resultMap="resultMap">
+        select <include refid="column"/> from user where user_name = #{userName}
+    </select>
+
+</mapper>

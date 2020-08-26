@@ -1,0 +1,21 @@
+server:
+  port: 8888
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/admin-template
+    username: root
+    password: luffy1994
+    type: com.alibaba.druid.pool.DruidDataSource
+
+jwt:
+ secret: luffy_secret
+ header: Authorization
+ tokenHead: "Bearer "
+ expiration: 259200
+
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: classpath:com.luffy.**.model
+  config-location: classpath:mybatis/config.xml
