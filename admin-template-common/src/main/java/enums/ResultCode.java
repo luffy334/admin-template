@@ -19,7 +19,10 @@ public enum ResultCode {
     ACCOUNT_LOCK(10101, "Account Is Lock"),
     ACCOUNT_UNREGISTERED(10102, "Account Is Unregistered"),
     ACCOUNT_PASSWORD_FAIL(10103, "Incorrect Account Or Password"),
-    ACCOUNT_UNKNOWN_FAIL(10103, "Unknown Fail For Account");
+    ACCOUNT_UNKNOWN_FAIL(10103, "Unknown Fail For Account"),
+    ACCOUNT_REGISTERED(10104, "Account Is Registered"),
+    ACCOUNT_SUPPER(10105, "Can Not Delete Supper Account"),
+    LOGIN_CREDENTIALS_FAIL(10106, "The Login Credentials Is Fail");
 
 
     @Getter

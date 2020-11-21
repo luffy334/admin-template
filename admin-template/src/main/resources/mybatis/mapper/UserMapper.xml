@@ -16,8 +16,112 @@
         id, user_name, account, password, state, register_time, update_time
     </sql>
 
-    <select id="selectByUserName" resultMap="resultMap">
-        select <include refid="column"/> from user where user_name = #{userName}
+    <insert id="add" keyColumn="id" keyProperty="id" >
+        INSERT INTO user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="registerTime != null">
+                register_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=DECIMAL},
+            </if>
+            <if test="registerTime != null">
+                #{registerTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM user WHERE id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="update">
+        UPDATE user
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=DECIMAL},
+            </if>
+            <if test="registerTime != null">
+                register_time = #{registerTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectById" resultMap="resultMap">
+        SELECT
+            <include refid="column"/>
+        FROM
+            USER
+        WHERE
+            id = #{id, jdbcType=VARCHAR}
     </select>
 
+    <select id="selectByUserName" resultMap="resultMap">
+        SELECT
+            <include refid="column"/>
+        FROM
+            USER
+        WHERE
+            user_name = #{userName, jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryUser" resultMap="resultMap">
+        SELECT
+            <include refid="column"/>
+        FROM
+            USER
+        WHERE
+            1=1
+        <if test="userName != null and userName != ''">
+            AND user_name = #{userName, jdbcType=VARCHAR}
+        </if>
+    </select>
 </mapper>

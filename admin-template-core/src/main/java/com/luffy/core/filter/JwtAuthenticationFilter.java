@@ -3,7 +3,6 @@ package com.luffy.core.filter;
 import bean.ResultBean;
 import com.luffy.core.utils.JwtTokenUtil;
 import enums.ResultCode;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -18,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 登录拦截器
@@ -25,9 +26,6 @@ import java.util.Collection;
  * @author luffy
  */
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-
-    @Value("${jwt.tokenHead}")
-    private String tokenPrefix;
 
     private final AuthenticationManager authenticationManager;
 
@@ -55,9 +53,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         // 返回token
-        response.setHeader("token", tokenPrefix + token);
+        response.setHeader("Authorization", token);
         response.setContentType("text/json;charset=utf-8");
-        response.getWriter().write(JsonUtil.getJson(new ResultBean<>(ResultCode.SUCCESS)));
+        ResultBean<Map<String, String>> resultBean = new ResultBean<>(ResultCode.SUCCESS);
+        Map<String, String> dataMap = new HashMap<>(2);
+        dataMap.put("token", token);
+        resultBean.setData(dataMap);
+        response.getWriter().write(JsonUtil.getJson(resultBean));
     }
 
     /**

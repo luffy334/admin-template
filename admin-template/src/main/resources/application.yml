@@ -7,15 +7,21 @@ spring:
     username: root
     password: luffy1994
     type: com.alibaba.druid.pool.DruidDataSource
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
 
 jwt:
  secret: luffy_secret
- header: Authorization
- tokenHead: "Bearer "
  expiration: 259200
-
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
   type-aliases-package: classpath:com.luffy.**.model
   config-location: classpath:mybatis/config.xml
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

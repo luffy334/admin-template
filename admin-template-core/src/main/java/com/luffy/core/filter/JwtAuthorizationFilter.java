@@ -1,7 +1,7 @@
 package com.luffy.core.filter;
 
 import com.luffy.core.utils.JwtTokenUtil;
-import org.springframework.beans.factory.annotation.Value;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,11 +24,7 @@ import java.util.Collection;
  */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    @Value("${jwt.tokenHead}")
-    private String tokenPrefix;
-
-    @Value("${jwt.header}")
-    private String tokenHeader;
+    private static final String TOKEN_HEADER = "Authorization";
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -39,9 +35,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String token = request.getHeader(tokenHeader);
+        String token = request.getHeader(TOKEN_HEADER);
         // 放行没有token的请求
-        if (token == null || !token.startsWith(tokenPrefix)) {
+        if (token == null) {
             chain.doFilter(request, response);
         } else {
             //解析token并设置认证信息
@@ -55,12 +51,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
      *
      * @author luffy
      * @date 2020/8/26 16:35
-     * @param tokenHeader
+     * @param token
      * @return org.springframework.security.authentication.UsernamePasswordAuthenticationToken
      **/
-    private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) {
+    private UsernamePasswordAuthenticationToken getAuthentication(String token) throws ExpiredJwtException {
         // 去掉前缀 获取Token字符串
-        String token = tokenHeader.replace(tokenPrefix, "");
         // 从Token中解密获取用户名
         String username = JwtTokenUtil.getUserName(token);
         // 从Token中解密获取用户角色
@@ -68,7 +63,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // 将[ROLE_XXX,ROLE_YYY]格式的角色字符串转换为数组
         String[] roles = role.replace("[", "").replace("]", "").split(", ");
         Collection<SimpleGrantedAuthority> authorities=new ArrayList<>();
-        for (String s:roles){
+        for (String s : roles){
             if (StringUtils.hasText(s)) {
                 authorities.add(new SimpleGrantedAuthority(s));
             }

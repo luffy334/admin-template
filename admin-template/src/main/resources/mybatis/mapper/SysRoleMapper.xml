@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luffy.mapper.SysRoleMapper">
+
+    <resultMap id="resultMap" type="com.luffy.model.SysRole">
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+
+    <sql id="column">
+        id, name, creator, creat_time, update_time
+    </sql>
+
+    <sql id="prefixColumn">
+        sr.id, sr.name, sr.creator, sr.creat_time, sr.update_time
+    </sql>
+
+    <select id="queryRoleByUserId" resultMap="resultMap">
+        SELECT DISTINCT
+            <include refid="prefixColumn"/>
+        FROM
+            `user` u
+        RIGHT JOIN
+            user_role ur ON u.id = ur.user_id
+        RIGHT JOIN
+            sys_role sr ON ur.role_id = sr.id
+        WHERE
+            u.id = #{userId, jdbcType=VARCHAR}
+    </select>
+
+</mapper>

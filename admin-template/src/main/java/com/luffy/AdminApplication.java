@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @author luffy
  */
-@MapperScan({"com.luffy.mapper"})
+@MapperScan({"com.luffy.mapper","com.luffy.tools.mapper"})
 @SpringBootApplication
 public class AdminApplication {
 

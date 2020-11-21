@@ -11,10 +11,16 @@ import lombok.Data;
 @Data
 public class ResultBean<T> {
 
-    private ResultCode resultCode;
+    private int resultCode;
+    private String resultMsg;
     private T data;
 
+    public ResultBean() {
+
+    }
+
     public ResultBean(ResultCode resultCode) {
-        this.resultCode = resultCode;
+        this.resultCode = resultCode.getCode();
+        this.resultMsg = resultCode.getMsg();
     }
 }

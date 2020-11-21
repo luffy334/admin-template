@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luffy.mapper.SysPermissionMapper">
+
+    <resultMap id="resultMap" type="com.luffy.model.SysPermission">
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
+        <result column="uri" jdbcType="VARCHAR" property="uri" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="sort" jdbcType="INTEGER" property="sort" />
+        <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+
+    <sql id="column">
+        id, parent_id, name, icon, uri, level, sort, creat_time, update_time
+    </sql>
+
+    <sql id="prefixColumn">
+        sp.id, sp.parent_id, sp.name, sp.icon, sp.uri, sp.level, sp.sort, sp.creat_time, sp.update_time
+    </sql>
+
+    <select id="queryByUserNameAndLevel" resultMap="resultMap">
+        SELECT DISTINCT
+            <include refid="prefixColumn"/>
+        FROM
+            `user` u
+        left JOIN
+            user_role ur ON u.id = ur.user_id
+        LEFT JOIN
+            sys_role_permission srp ON ur.role_id = srp.role_id
+        LEFT JOIN
+            sys_permission sp ON sp.id = srp.permission_id
+        WHERE
+            u.user_name = #{userName, jdbcType=VARCHAR}
+        AND
+            sp.level = #{level, jdbcType=INTEGER}
+    </select>
+
+    <select id="queryByUserNameParentId" resultType="com.luffy.model.SysPermission">
+        SELECT
+            <include refid="prefixColumn"/>
+        FROM
+            `user` u
+        left JOIN
+            user_role ur ON u.id = ur.user_id
+        LEFT JOIN
+            sys_role_permission srp ON ur.role_id = srp.role_id
+        LEFT JOIN
+            sys_permission sp ON sp.id = srp.permission_id
+        WHERE
+            u.user_name = #{userName, jdbcType=VARCHAR}
+        AND
+            sp.parent_id = #{parentId, jdbcType=VARCHAR}
+    </select>
+
+</mapper>

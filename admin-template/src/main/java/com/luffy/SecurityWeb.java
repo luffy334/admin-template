@@ -49,9 +49,12 @@ public class SecurityWeb extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        // 开启允许iframe 嵌套
+        http.headers().frameOptions().disable();
+        http.csrf().disable().cors().and()
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
+                .antMatchers("/sys/generator").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 // 添加JWT登录拦截器
